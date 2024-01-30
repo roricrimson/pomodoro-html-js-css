@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro</title>
+  </head>
+  <body>
+    <div id="display_time">00:25:00</div>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="resume">Resume</button>
+    <audio loop>
+      <source
+        src="audio/15 Minute Healing Meditation Music  Sound Healing For Deep Relaxation & Stress Relief.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+  </body>
+  <script>
+    let is_start = false;
+    let is_stop = false;
+    let is_break_time = false;
+    let work_time_count = 0;
+    let stop_time;
+
+    document
+      .getElementById("start")
+      .addEventListener("click", async function () {
+        if (is_start) return;
+        is_start = true;
+        await countdownTimer(15);
+        if (is_stop) return;
+        console.log("Break Time");
+        is_break_time = true;
+        await countdownTimer(work_time_count == 4 ? 15 : 5);
+        work_time_count++;
+        if (work_time_count == 4) {
+          work_time_count = 0;
+        }
+        is_start = false;
+        is_break_time = false;
+      });
+
+    document.getElementById("stop").addEventListener("click", function () {
+      if (is_start) {
+        is_stop = true;
+        is_start = false;
+      }
+    });
+
+    document
+      .getElementById("resume")
+      .addEventListener("click", async function () {
+        if (is_stop) {
+          is_stop = false;
+          if (is_start) return;
+          is_start = true;
+          await countdownTimer(stop_time);
+          if (is_stop) return;
+          console.log("Break Time");
+          await countdownTimer(work_time_count == 4 ? 15 : 5);
+          work_time_count++;
+          if (work_time_count == 4) {
+            work_time_count = 0;
+          }
+          is_start = false;
+        }
+      });
+
+    function countdownTimer(seconds) {
+      return new Promise((resolve) => {
+        const countdown = document.getElementById("display_time");
+
+        function updateCountdown() {
+          const hours = Math.floor(seconds / 3600);
+          const minutes = Math.floor((seconds % 3600) / 60);
+          const remainingSeconds = seconds % 60;
+
+          countdown.textContent = `${String(hours).padStart(2, "0")}:${String(
+            minutes
+          ).padStart(2, "0")}
+          `;
+
+          if (seconds > 0) {
+            seconds--;
+          } else {
+            resolve("Done");
+            clearInterval(interval);
+          }
+
+          if (is_stop) {
+            stop_time = seconds;
+            if (is_break_time) return;
+            resolve("Done");
+            clearInterval(interval);
+          }
+        }
+
+        updateCountdown(); // Initial display
+
+        const interval = setInterval(updateCountdown, 1000); // Update every 1 second
+      });
+    }
+  </script>
+</html>

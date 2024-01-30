@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>audio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+     integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+   <div class="audio-player">
+        <audio src="audio/15 Minute Healing Meditation Music  Sound Healing For Deep Relaxation & Stress Relief.mp3"></audio>
+        <div class="controls">
+            <button class="player-button">
+                <i class="fa-solid fa-circle-play fa-2xl"></i>
+            </button>
+            <input type="range" class="timeline" max="100" value="0">
+        </div>
+   </div>
+</body>
+<script>
+    const playerButton = document.querySelector('.player-button')
+    const  audio = document.querySelector('audio')
+    const  playIcon = `<i class="fa-solid fa-circle-play fa-2xl"></i>`
+    const pauseIcon = `<i class="fa-solid fa-circle-pause fa-2xl"></i>`;
+
+    playerButton.addEventListener('click', toggleAudio);
+
+    function toggleAudio () {
+        if (audio.paused) {
+            audio.play();
+            playerButton.innerHTML = pauseIcon;
+            } else {
+            audio.pause();
+            playerButton.innerHTML = playIcon;
+            }
+    }
+
+    function audioEnded () {
+    playerButton.innerHTML = playIcon;
+    }
+
+    audio.onended = audioEnded;
+
+</script>
+</html>
